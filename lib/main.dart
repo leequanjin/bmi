@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'info.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -60,13 +62,13 @@ class _MyHomePageState extends State<MyHomePage> {
   double _weight = 0.0;
   double _height = 0.0;
 
-  String _bmiOutput = ' ';
+  String _bmiOutput = '';
   String _bmiImage = 'assets/images/empty.png';
 
   final TextEditingController _weightCtrl = TextEditingController();
   final TextEditingController _heightCtrl = TextEditingController();
 
-  void _calculateBMI(){
+  void _calculateBMI() {
     _weight = double.tryParse(_weightCtrl.text)!;
     _height = double.tryParse(_heightCtrl.text)!;
 
@@ -91,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _heightCtrl.clear();
     setState(() {
       _bmi = 0.0;
-      _bmiOutput = ' ';
+      _bmiOutput = '';
       _bmiImage = 'assets/images/empty.png';
     });
   }
@@ -102,19 +104,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
     _weightCtrl.dispose();
     _heightCtrl.dispose();
-  }
-
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
   }
 
   @override
@@ -165,31 +154,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 160,
                     height: 160,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 3
-                      ),
+                      border: Border.all(color: Colors.orange, width: 3),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Image.asset(
                       _bmiImage,
                     ),
                   ),
-                  Container(
-                    width: 150,
-                    height: 150,
-                    alignment: AlignmentDirectional.center,
-                    child: _bmi==0.0? Text(
-                      textAlign: TextAlign.center,
-                      'Enter your body height and weight to know your BMI',
-                      style: TextStyle(fontSize: 12, color: Colors.orange),
-                    ): Text(' '),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 144,
+                      height: 144,
+                      alignment: AlignmentDirectional.center,
+                      child: _bmi == 0.0
+                          ? Text(
+                              textAlign: TextAlign.center,
+                              'Enter your body height and weight to know your BMI',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.orange),
+                            )
+                          : Text(' '),
+                    ),
                   )
                 ],
               ),
-              const Text(
-                'Your BMI is : '
-              ),
+              const Text('Your BMI is : '),
               Text(
                 _bmiOutput,
                 style: Theme.of(context).textTheme.displaySmall,
@@ -197,40 +187,42 @@ class _MyHomePageState extends State<MyHomePage> {
               TextField(
                 controller: _weightCtrl,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Enter weight (kg)'
-                ),
+                decoration: InputDecoration(labelText: 'Enter weight (kg)'),
               ),
               TextField(
                 controller: _heightCtrl,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Enter height (m)'
-                ),
+                decoration: InputDecoration(labelText: 'Enter height (m)'),
               ),
-              Expanded(child: SizedBox(height: double.infinity,)),
+              Expanded(
+                  child: SizedBox(
+                height: double.infinity,
+              )),
+              IconButton(
+                icon: Icon(Icons.info),
+                iconSize: 48,
+                color: Colors.orangeAccent,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Info(
+                                bmi: _bmiOutput,
+                              )));
+                },
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  ElevatedButton(onPressed: _resetScreen, child: Text('Reset')),
                   ElevatedButton(
-                      onPressed: _resetScreen, 
-                      child: Text('Reset')
-                  ),
-                  ElevatedButton(
-                      onPressed: _calculateBMI, 
-                      child: Text('Calculate')
-                  )
+                      onPressed: _calculateBMI, child: Text('Calculate'))
                 ],
               )
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
